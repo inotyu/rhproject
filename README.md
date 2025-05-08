@@ -125,9 +125,8 @@ Este projeto está licenciado sob a Licença MIT. Veja o arquivo LICENSE para ma
 
 ## Imagens
 
-![Tela 1](tela2.png)
+![Tela 1](rhsystem/static/images/tela2.png)
 
+![Tela 1](rhsystem/static/images/tela1.png)
 
-
-![Tela 2](tela1.png)
 
