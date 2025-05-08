@@ -1,87 +1,123 @@
 # Sistema de Gestão de Recursos Humanos (RH) com Flask
 
+[![Português](https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Flag_of_Brazil.svg/45px-Flag_of_Brazil.svg.png)](#-instruções-em-português)
+
 Este projeto é um sistema de gerenciamento de recursos humanos, desenvolvido em **Flask**, com funcionalidades como:
 
-- Autenticação de usuários (login e registro).
-- Cadastro, edição e remoção de funcionários.
-- Atribuição de trabalhos aos funcionários.
-- Upload de fotos para os funcionários.
-- Filtros para busca e visualização de funcionários por cargo e estado civil.
-- Dashboard com resumo de funcionários e cargos.
+- Autenticação de usuários (login e registro)
+- Cadastro, edição e remoção de funcionários
+- Atribuição de trabalhos aos funcionários
+- Upload de fotos para os funcionários
+- Filtros para busca e visualização de funcionários por cargo e estado civil
+- Dashboard com resumo de funcionários e cargos
 
-## Tecnologias Utilizadas
+⚠️ **Aviso:** o código está escrito em Português Brasileiro.
 
-- **Flask**: Framework web em Python.
-- **Flask-Login**: Gerenciamento de sessão de usuários.
-- **MySQL**: Banco de dados para armazenar informações de funcionários e usuários.
-- **Werkzeug**: Utilizado para segurança e manipulação de arquivos.
+<!-- Exemplo de screenshot -->
+<!-- <a href="https://ibb.co/vjGcy0z"><img src="" alt="Captura de Tela" border="0" /></a> -->
+
+## Instruções
+
+1. **Clone o projeto:**
+
+   ```bash
+   git clone <url-do-repositorio>
+   cd rh
+   ```
+
+2. **Crie um ambiente virtual (opcional, mas recomendado):**
+
+   ```bash
+   python -m venv venv
+   # No Windows:
+   venv\Scripts\activate
+   # No Linux/Mac:
+   source venv/bin/activate
+   ```
+
+3. **Instale as dependências necessárias:**
+
+   Este projeto requer as seguintes dependências em Python:
+   - Flask
+   - Flask-Login
+   - Werkzeug
+   - mysql-connector-python
+
+   Instale todas de uma vez com:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Configure o banco de dados:**
+
+   Crie as tabelas necessárias para funcionários e usuários. Exemplo:
+
+   ```sql
+   CREATE TABLE funcionarios (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       nome VARCHAR(255) NOT NULL,
+       cargo VARCHAR(100),
+       salario DECIMAL(10,2),
+       estado_civil VARCHAR(20),
+       foto VARCHAR(255)
+   );
+
+   CREATE TABLE usuarios (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       username VARCHAR(150) UNIQUE NOT NULL,
+       password_hash VARCHAR(255) NOT NULL
+   );
+   ```
+
+   Configure a conexão MySQL no arquivo `db_utils.py`.
+
+5. **Execute a aplicação Flask:**
+
+   ```bash
+   python app.py
+   ```
+
+6. **Uso:**
+
+   - Acesse o app em [http://127.0.0.1:5000](http://127.0.0.1:5000) no seu navegador.
+   - Utilize o sistema de login e registro para autenticar usuários.
+   - Use o dashboard para gerenciar funcionários, cargos e muito mais.
+   - Adicione, edite ou remova funcionários e atribua cargos a eles.
+   - Os funcionários podem visualizar suas tarefas e informações de salário.
 
 ## Funcionalidades
 
-- **Cadastro de Funcionários**: Permite adicionar novos funcionários com informações como nome, cargo, estado civil, salário e foto.
-- **Edição de Funcionários**: Edita os dados de um funcionário existente, permitindo modificar todas as informações.
-- **Remoção de Funcionários**: Exclui um funcionário do sistema.
-- **Atribuição de Trabalhos**: Permite atribuir um trabalho a um funcionário, com informações sobre o título, descrição e datas de início e fim.
-- **Login e Registro**: Sistema de autenticação com registro de novos usuários e login com verificação de senha.
-- **Filtro de Funcionários**: Busca de funcionários por nome, cargo e estado civil.
+- **Autenticação:** Sistema de login e registro de usuários
+- **Cadastro de Funcionários:** Adição, edição e remoção de funcionários
+- **Atribuição de Trabalhos:** Atribuição de tarefas a funcionários
+- **Dashboard:** Resumo dos funcionários e cargos
+- **Busca e Filtros:** Pesquisa de funcionários por cargo e estado civil
+- **Upload de Fotos:** Possibilidade de adicionar fotos aos perfis dos funcionários
 
-## Como Rodar o Projeto
+## Tecnologias Utilizadas
 
-1. Clone este repositório para sua máquina local:
+- **Flask:** Framework web em Python
+- **MySQL:** Banco de dados para armazenamento de dados de funcionários
+- **Flask-Login:** Extensão Flask para autenticação
+- **Werkzeug:** Utilitário para segurança e senha
+- **HTML/CSS/JavaScript:** Front-end da aplicação
 
-   ```bash
-   git clone https://github.com/seu-usuario/nome-do-repositorio.git
-Instale as dependências:
+## Licença
 
-bash
-Copiar
-Editar
-pip install -r requirements.txt
-Crie e configure o banco de dados MySQL conforme a estrutura abaixo:
+Este projeto está licenciado sob a Licença MIT. Veja o arquivo LICENSE para mais detalhes.
 
-Tabelas principais:
+## Funcionalidades
+- Dashboard com estatísticas
+- Cadastro, listagem, edição e remoção de funcionários (em memória)
+- Upload de foto
+- Busca e filtros
+- Mensagens visuais de sucesso/erro
+- Layout moderno, responsivo, tema rosa e branco
 
-funcionarios
+## Customização
+- Para alterar o tema, edite os arquivos em `templates/` e `static/css/`.
 
-usuarios
-
-trabalhos
-
-Exemplo de criação da tabela de funcionários:
-
-sql
-Copiar
-Editar
-CREATE TABLE funcionarios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(255) NOT NULL,
-    cargo VARCHAR(100),
-    salario DECIMAL(10,2),
-    estado_civil VARCHAR(20),
-    foto VARCHAR(255)
-);
-Configure o arquivo de banco de dados para conectar ao MySQL no arquivo db_utils.py.
-
-Rode o servidor Flask:
-
-bash
-Copiar
-Editar
-python app.py
-Acesse o sistema através do navegador em http://127.0.0.1:5000.
-
-Considerações
-Este sistema foi criado para fins de aprendizado e pode ser adaptado para empresas de diferentes portes. Algumas melhorias que podem ser feitas:
-
-Implementar controle de acesso para diferentes tipos de usuários (admin, gerente, etc).
-
-Adicionar relatórios detalhados sobre salários, departamentos e cargos.
-
-Criar um sistema de feedback para os funcionários.
-
-Implementar funcionalidades de notificação.
-
-Contribuições
-Contribuições são bem-vindas! Se você tiver alguma sugestão ou melhoria, fique à vontade para abrir uma issue ou enviar um pull request.
-
-Projeto criado por Seu Nome.
+## Observações
+- Os dados são compartilhados.
+- Meu objetivo com este projeto foi mostrar minhas skills com tecnológias como sql, python, html e css.
