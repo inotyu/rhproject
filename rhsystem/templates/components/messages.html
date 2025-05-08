@@ -1,0 +1,24 @@
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="space-y-3 mb-4">
+      {% for category, message in messages %}
+        <div class="flex items-center px-4 py-3 rounded shadow transition-all animate-fade-in
+          {% if category == 'success' %}bg-pink-100 text-pink-800 border-l-4 border-pink-500{% elif category == 'error' %}bg-red-100 text-red-800 border-l-4 border-red-500{% endif %}">
+          {% if category == 'success' %}
+            <i class="fa fa-check-circle mr-2"></i>
+          {% elif category == 'error' %}
+            <i class="fa fa-times-circle mr-2"></i>
+          {% endif %}
+          <span>{{ message }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+<style>
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fade-in 0.5s; }
+</style>
