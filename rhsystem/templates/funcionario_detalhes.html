@@ -1,0 +1,10 @@
+<h2>{{ funcionario.nome }}</h2>
+<a href="{{ url_for('novo_trabalho', func_id=funcionario.id) }}" class="btn btn-pink">Atribuir Trabalho</a>
+<h3 class="mt-4">Trabalhos Atribuídos</h3>
+<ul>
+  {% for trabalho in trabalhos %}
+    <li><strong>{{ trabalho.titulo }}</strong> - {{ trabalho.data_inicio }} até {{ trabalho.data_fim }}</li>
+  {% else %}
+    <li>Nenhum trabalho atribuído ainda.</li>
+  {% endfor %}
+</ul>

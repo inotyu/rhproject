@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}Funcionários | RH Rosa{% endblock %}
+{% block content %}
+<div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+  <form method="get" class="flex gap-2 flex-wrap" id="filtro-form">
+    <input type="text" name="busca" placeholder="Buscar por nome ou cargo" value="{{ request.args.get('busca', '') }}" class="border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-pink-400">
+    <select name="cargo" class="border rounded px-2 py-1" onchange="this.form.submit()">
+      <option value="">Todos os cargos</option>
+      {% for pos in positions %}
+        <option value="{{ pos }}" {% if pos == request.args.get('cargo') %}selected{% endif %}>{{ pos }}</option>
+      {% endfor %}
+    </select>
+    <select name="estado_civil" class="border rounded px-2 py-1" onchange="this.form.submit()">
+      <option value="">Todos os estados civis</option>
+      {% for est in marital_statuses %}
+        <option value="{{ est }}" {% if est == request.args.get('estado_civil') %}selected{% endif %}>{{ est }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="bg-pink-600 text-white px-4 py-1 rounded hover:bg-pink-700 transition"><i class="fa fa-search"></i> Buscar</button>
+  </form>
+  <a href="/novo" class="bg-pink-600 text-white px-4 py-2 rounded shadow hover:bg-pink-700 transition"><i class="fa fa-plus"></i> Novo Funcionário</a>
+</div>
+<!-- Desktop Table -->
+<div class="hidden md:block">
+  <table class="min-w-full bg-white rounded-xl shadow overflow-hidden">
+    <thead class="bg-pink-100 text-pink-700">
+      <tr>
+        <th class="py-3 px-2">Foto</th>
+        <th class="py-3 px-2">Nome</th>
+        <th class="py-3 px-2">Cargo</th>
+        <th class="py-3 px-2">Salário</th>
+        <th class="py-3 px-2">Estado Civil</th>
+        <th class="py-3 px-2">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for emp in employees %}
+      <tr class="border-b hover:bg-pink-50 transition">
+        <td class="py-2 px-2 text-center">
+          {% if emp.foto %}
+            <img src="/static/uploads/{{ emp.foto }}" alt="Foto" class="h-12 w-12 rounded-full object-cover mx-auto">
+          {% else %}
+            <i class="fa fa-user-circle fa-2x text-pink-300"></i>
+          {% endif %}
+        </td>
+        <td class="py-2 px-2">{{ emp.nome }}</td>
+        <td class="py-2 px-2">{{ emp.cargo }}</td>
+        <td class="py-2 px-2">R$ {{ '{:,.2f}'.format(emp.salario).replace(',', 'X').replace('.', ',').replace('X', '.') }}</td>
+        <td class="py-2 px-2">{{ emp.estado_civil }}</td>
+        <td class="py-2 px-2 flex gap-2 justify-center">
+          <a href="/editar/{{ emp.id }}" class="text-blue-600 hover:text-blue-800"><i class="fa fa-edit"></i></a>
+          <button onclick="confirmDelete('{{ emp.id }}', '{{ emp.nome }}')" class="text-red-600 hover:text-red-800"><i class="fa fa-trash"></i></button>
+        </td>
+      </tr>
+      {% endfor %}
+      {% if employees|length == 0 %}
+      <tr><td colspan="6" class="text-center py-6 text-pink-500">Nenhum funcionário encontrado.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+<!-- Mobile Cards -->
+<div class="md:hidden flex flex-col gap-4">
+  {% for emp in employees %}
+  <div class="bg-white rounded-xl shadow p-4 flex flex-col gap-2">
+    <div class="flex items-center gap-3">
+      {% if emp.foto %}
+        <img src="/static/uploads/{{ emp.foto }}" alt="Foto" class="h-14 w-14 rounded-full object-cover">
+      {% else %}
+        <i class="fa fa-user-circle fa-3x text-pink-300"></i>
+      {% endif %}
+      <div>
+        <div class="font-bold text-lg text-pink-700">{{ emp.nome }}</div>
+        <div class="text-sm text-gray-600">{{ emp.cargo }}</div>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-4 mt-2 text-sm">
+      <div><span class="font-semibold">Salário:</span> R$ {{ '{:,.2f}'.format(emp.salario).replace(',', 'X').replace('.', ',').replace('X', '.') }}</div>
+      <div><span class="font-semibold">Estado Civil:</span> {{ emp.estado_civil }}</div>
+    </div>
+    <div class="flex gap-4 mt-2 justify-end">
+      <a href="/editar/{{ emp.id }}" class="text-blue-600 hover:text-blue-800 text-xl" aria-label="Editar"><i class="fa fa-edit"></i></a>
+      <button onclick="confirmDelete('{{ emp.id }}', '{{ emp.nome }}')" class="text-red-600 hover:text-red-800 text-xl" aria-label="Remover"><i class="fa fa-trash"></i></button>
+    </div>
+  </div>
+  {% endfor %}
+  {% if employees|length == 0 %}
+  <div class="text-center py-6 text-pink-500">Nenhum funcionário encontrado.</div>
+  {% endif %}
+</div>
+
+<!-- Modal de confirmação -->
+<div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+    <h3 class="text-lg font-bold mb-4 text-pink-700">Confirmar Remoção</h3>
+    <p id="deleteMsg" class="mb-4">Tem certeza que deseja remover este funcionário?</p>
+    <div class="flex justify-end gap-2">
+      <button onclick="hideModal()" class="px-4 py-1 rounded bg-gray-200 hover:bg-gray-300">Cancelar</button>
+      <form id="deleteForm" method="post" style="display:inline;">
+        <button type="submit" class="px-4 py-1 rounded bg-pink-600 text-white hover:bg-pink-700">Remover</button>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+function confirmDelete(id, nome) {
+  document.getElementById('deleteModal').classList.remove('hidden');
+  document.getElementById('deleteMsg').textContent = `Tem certeza que deseja remover o funcionário "${nome}"?`;
+  document.getElementById('deleteForm').action = `/remover/${id}`;
+}
+function hideModal() {
+  document.getElementById('deleteModal').classList.add('hidden');
+}
+</script>
+{% endblock %}
