@@ -5,8 +5,8 @@ from mysql.connector import Error
 DB_CONFIG = {
     'host': 'null',#Altere para sua host
     'user': 'null', #Altere para seu usuário 
-    'password': 'null',  # Altere para sua senha
-    'database': 'null' # Altere para sua database
+    'password': 'null',  #Altere para sua senha
+    'database': 'null' #Altere para sua database
 }
 
 def get_connection():
