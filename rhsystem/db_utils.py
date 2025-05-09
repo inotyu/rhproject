@@ -3,10 +3,10 @@ from mysql.connector import Error
 
 # Configure these as needed or use environment variables
 DB_CONFIG = {
-    'host': 'null',
-    'user': 'null',
+    'host': 'null',#Altere para sua host
+    'user': 'null', #Altere para seu usuário 
     'password': 'null',  # Altere para sua senha
-    'database': 'null'
+    'database': 'null' # Altere para sua database
 }
 
 def get_connection():
