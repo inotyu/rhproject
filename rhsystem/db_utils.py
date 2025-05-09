@@ -3,10 +3,10 @@ from mysql.connector import Error
 
 # Configure these as needed or use environment variables
 DB_CONFIG = {
-    'host': 'lowproject.mysql.pythonanywhere-services.com',
-    'user': 'lowproject',
-    'password': '2024debe',  # Altere para sua senha
-    'database': 'lowproject$default'
+    'host': 'null',
+    'user': 'null',
+    'password': 'null',  # Altere para sua senha
+    'database': 'null'
 }
 
 def get_connection():
